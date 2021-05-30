@@ -16,13 +16,13 @@ export GOPATH="$(mktemp -d)"
 pushd "$GOPATH" || exit 1
 
 echo "Copying ko to temp gopath."
-mkdir -p "$GOPATH/src/github.com/google/ko"
-cp -r "$ROOT_DIR/"* "$GOPATH/src/github.com/google/ko/"
+mkdir -p "$GOPATH/src/github.com/skirsten/ko"
+cp -r "$ROOT_DIR/"* "$GOPATH/src/github.com/skirsten/ko/"
 
 echo "Downloading github.com/go-training/helloworld"
 go get -d github.com/go-training/helloworld
 
-pushd "$GOPATH/src/github.com/google/ko" || exit 1
+pushd "$GOPATH/src/github.com/skirsten/ko" || exit 1
 
 echo "Replacing hello world in vendor with TEST."
 sed -i 's/Hello World/TEST/g' ./vendor/github.com/go-training/helloworld/main.go

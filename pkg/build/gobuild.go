@@ -56,7 +56,7 @@ Run this to remove this warning:
     export GOROOT=$(go env GOROOT)
 
 For more information see:
-    https://github.com/google/ko/issues/106
+    https://github.com/skirsten/ko/issues/106
 -----------------------------------------------------------------
 `
 )
@@ -188,7 +188,7 @@ func moduleInfo(ctx context.Context) (*modules, error) {
 // package managers update go or when using a pre-built
 // `ko` binary that expects a different GOROOT.
 //
-// See https://github.com/google/ko/issues/106
+// See https://github.com/skirsten/ko/issues/106
 func getGoroot(ctx context.Context) (string, error) {
 	output, err := exec.CommandContext(ctx, "go", "env", "GOROOT").Output()
 	return strings.TrimSpace(string(output)), err
@@ -616,7 +616,7 @@ func (g *gobuild) buildOne(ctx context.Context, s string, base v1.Image, platfor
 	cfg.Config.Entrypoint = []string{appPath}
 	updatePath(cfg)
 	cfg.Config.Env = append(cfg.Config.Env, "KO_DATA_PATH="+kodataRoot)
-	cfg.Author = "github.com/google/ko"
+	cfg.Author = "github.com/skirsten/ko"
 
 	if cfg.Config.Labels == nil {
 		cfg.Config.Labels = map[string]string{}

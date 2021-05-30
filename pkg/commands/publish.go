@@ -17,7 +17,7 @@ package commands
 import (
 	"fmt"
 
-	"github.com/google/ko/pkg/commands/options"
+	"github.com/skirsten/ko/pkg/commands/options"
 	"github.com/spf13/cobra"
 )
 

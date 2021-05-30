@@ -24,7 +24,7 @@ import (
 	"github.com/google/go-containerregistry/pkg/logs"
 	"github.com/spf13/cobra"
 
-	"github.com/google/ko/pkg/commands"
+	"github.com/skirsten/ko/pkg/commands"
 )
 
 func main() {

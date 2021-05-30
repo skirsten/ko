@@ -1,4 +1,4 @@
-module github.com/google/ko
+module github.com/skirsten/ko
 
 go 1.15
 

@@ -22,7 +22,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/google/ko/pkg/publish"
+	"github.com/skirsten/ko/pkg/publish"
 	"github.com/spf13/cobra"
 )
 
@@ -63,7 +63,7 @@ type PublishOptions struct {
 
 func AddPublishArg(cmd *cobra.Command, po *PublishOptions) {
 	// Set DockerRepo from the KO_DOCKER_REPO envionment variable.
-	// See https://github.com/google/ko/pull/351 for flag discussion.
+	// See https://github.com/skirsten/ko/pull/351 for flag discussion.
 	if dockerRepo, exists := os.LookupEnv("KO_DOCKER_REPO"); exists {
 		po.DockerRepo = dockerRepo
 	}

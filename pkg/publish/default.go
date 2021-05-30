@@ -28,7 +28,7 @@ import (
 	v1 "github.com/google/go-containerregistry/pkg/v1"
 	"github.com/google/go-containerregistry/pkg/v1/remote"
 	"github.com/google/go-containerregistry/pkg/v1/types"
-	"github.com/google/ko/pkg/build"
+	"github.com/skirsten/ko/pkg/build"
 )
 
 // defalt is intentionally misspelled to avoid keyword collision (and drive Jon nuts).

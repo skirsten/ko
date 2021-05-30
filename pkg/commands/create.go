@@ -20,7 +20,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/google/ko/pkg/commands/options"
+	"github.com/skirsten/ko/pkg/commands/options"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"golang.org/x/sync/errgroup"

@@ -47,7 +47,7 @@ func TestGoBuildIsSupportedRef(t *testing.T) {
 
 	// Supported import paths.
 	for _, importpath := range []string{
-		"ko://github.com/google/ko", // ko can build itself.
+		"ko://github.com/skirsten/ko", // ko can build itself.
 	} {
 		t.Run(importpath, func(t *testing.T) {
 			if err := ng.IsSupportedReference(importpath); err != nil {
@@ -58,8 +58,8 @@ func TestGoBuildIsSupportedRef(t *testing.T) {
 
 	// Unsupported import paths.
 	for _, importpath := range []string{
-		"ko://github.com/google/ko/pkg/build",       // not a command.
-		"ko://github.com/google/ko/pkg/nonexistent", // does not exist.
+		"ko://github.com/skirsten/ko/pkg/build",       // not a command.
+		"ko://github.com/skirsten/ko/pkg/nonexistent", // does not exist.
 	} {
 		t.Run(importpath, func(t *testing.T) {
 			if err := ng.IsSupportedReference(importpath); err == nil {
@@ -77,7 +77,7 @@ func TestGoBuildIsSupportedRefWithModules(t *testing.T) {
 
 	mods := &modules{
 		main: &modInfo{
-			Path: "github.com/google/ko/test",
+			Path: "github.com/skirsten/ko/test",
 			Dir:  ".",
 		},
 		deps: map[string]*modInfo{
@@ -93,10 +93,10 @@ func TestGoBuildIsSupportedRefWithModules(t *testing.T) {
 		withModuleInfo(mods),
 		withBuildContext(stubBuildContext{
 			// make all referenced deps commands
-			"github.com/google/ko/test":  &gb.Package{Name: "main"},
-			"github.com/some/module/cmd": &gb.Package{Name: "main"},
+			"github.com/skirsten/ko/test": &gb.Package{Name: "main"},
+			"github.com/some/module/cmd":  &gb.Package{Name: "main"},
 
-			"github.com/google/ko/pkg/build": &gb.Package{Name: "build"},
+			"github.com/skirsten/ko/pkg/build": &gb.Package{Name: "build"},
 		}),
 	}
 
@@ -107,8 +107,8 @@ func TestGoBuildIsSupportedRefWithModules(t *testing.T) {
 
 	// Supported import paths.
 	for _, importpath := range []string{
-		"ko://github.com/google/ko/test",  // ko can build the test package.
-		"ko://github.com/some/module/cmd", // ko can build commands in dependent modules
+		"ko://github.com/skirsten/ko/test", // ko can build the test package.
+		"ko://github.com/some/module/cmd",  // ko can build commands in dependent modules
 	} {
 		t.Run(importpath, func(t *testing.T) {
 			if err := ng.IsSupportedReference(importpath); err != nil {
@@ -119,9 +119,9 @@ func TestGoBuildIsSupportedRefWithModules(t *testing.T) {
 
 	// Unsupported import paths.
 	for _, importpath := range []string{
-		"ko://github.com/google/ko/pkg/build",       // not a command.
-		"ko://github.com/google/ko/pkg/nonexistent", // does not exist.
-		"ko://github.com/google/ko",                 // not in this module.
+		"ko://github.com/skirsten/ko/pkg/build",       // not a command.
+		"ko://github.com/skirsten/ko/pkg/nonexistent", // does not exist.
+		"ko://github.com/skirsten/ko",                 // not in this module.
 	} {
 		t.Run(importpath, func(t *testing.T) {
 			if err := ng.IsSupportedReference(importpath); err == nil {
@@ -155,7 +155,7 @@ func TestGoBuildNoKoData(t *testing.T) {
 	if err != nil {
 		t.Fatalf("random.Image() = %v", err)
 	}
-	importpath := "github.com/google/ko"
+	importpath := "github.com/skirsten/ko"
 
 	creationTime := v1.Time{Time: time.Unix(5000, 0)}
 	ng, err := NewGo(
@@ -397,7 +397,7 @@ func TestGoBuild(t *testing.T) {
 	if err != nil {
 		t.Fatalf("random.Image() = %v", err)
 	}
-	importpath := "github.com/google/ko"
+	importpath := "github.com/skirsten/ko"
 
 	creationTime := v1.Time{Time: time.Unix(5000, 0)}
 	ng, err := NewGo(
@@ -469,7 +469,7 @@ func TestGoBuildIndex(t *testing.T) {
 	if err != nil {
 		t.Fatalf("random.Image() = %v", err)
 	}
-	importpath := "github.com/google/ko"
+	importpath := "github.com/skirsten/ko"
 
 	creationTime := v1.Time{Time: time.Unix(5000, 0)}
 	ng, err := NewGo(
@@ -539,7 +539,7 @@ func TestNestedIndex(t *testing.T) {
 	if err != nil {
 		t.Fatalf("random.Image() = %v", err)
 	}
-	importpath := "github.com/google/ko"
+	importpath := "github.com/skirsten/ko"
 
 	nestedBase := mutate.AppendManifests(empty.Index, mutate.IndexAddendum{Add: base})
 

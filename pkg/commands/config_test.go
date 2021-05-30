@@ -20,7 +20,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/google/ko/pkg/commands/options"
+	"github.com/skirsten/ko/pkg/commands/options"
 )
 
 func TestOverrideDefaultBaseImageUsingBuildOption(t *testing.T) {

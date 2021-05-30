@@ -7,38 +7,38 @@ before:
     # you may remove this if you don't need go generate
     - go generate ./...
 builds:
-- main: ./main.go
-  env:
-  - CGO_ENABLED=0
-  flags:
-  - -trimpath
-  ldflags:
-  - "-s -w -X github.com/google/ko/pkg/commands.Version={{.Version}}"
-  goos:
-  - windows
-  - linux
-  - darwin
-  goarch:
-  - amd64
-  - arm64
-  - s390x
-  - 386
-  - mips64le
-  - ppc64le
+  - main: ./main.go
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - "-s -w -X github.com/skirsten/ko/pkg/commands.Version={{.Version}}"
+    goos:
+      - windows
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+      - s390x
+      - 386
+      - mips64le
+      - ppc64le
 archives:
-- replacements:
-    darwin: Darwin
-    linux: Linux
-    windows: Windows
-    386: i386
-    amd64: x86_64
+  - replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
 checksum:
-  name_template: 'checksums.txt'
+  name_template: "checksums.txt"
 snapshot:
   name_template: "{{ .Tag }}-next"
 changelog:
   sort: asc
   filters:
     exclude:
-    - '^docs:'
-    - '^test:'
+      - "^docs:"
+      - "^test:"

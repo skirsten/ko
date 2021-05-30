@@ -31,11 +31,11 @@ import (
 
 	"github.com/google/go-containerregistry/pkg/authn"
 	"github.com/google/go-containerregistry/pkg/name"
-	"github.com/google/ko/pkg/build"
-	"github.com/google/ko/pkg/commands/options"
-	"github.com/google/ko/pkg/publish"
-	"github.com/google/ko/pkg/resolve"
 	"github.com/mattmoor/dep-notify/pkg/graph"
+	"github.com/skirsten/ko/pkg/build"
+	"github.com/skirsten/ko/pkg/commands/options"
+	"github.com/skirsten/ko/pkg/publish"
+	"github.com/skirsten/ko/pkg/resolve"
 	"golang.org/x/sync/errgroup"
 	"gopkg.in/yaml.v3"
 	"k8s.io/apimachinery/pkg/labels"
@@ -392,7 +392,7 @@ func resolveFilesToWriter(
 	}
 
 	// Make sure we exit with an error.
-	// See https://github.com/google/ko/issues/84
+	// See https://github.com/skirsten/ko/issues/84
 	return errs.Wait()
 }
 

@@ -23,7 +23,7 @@ import (
 	"os"
 
 	"github.com/google/go-containerregistry/pkg/logs"
-	"github.com/google/ko/pkg/commands"
+	"github.com/skirsten/ko/pkg/commands"
 
 	cranecmd "github.com/google/go-containerregistry/cmd/crane/cmd"
 	"github.com/spf13/cobra"
@@ -31,10 +31,10 @@ import (
 
 const Deprecation258 = `NOTICE!
 -----------------------------------------------------------------
-Please install ko from github.com/google/ko.
+Please install ko from github.com/skirsten/ko.
 
 For more information see:
-   https://github.com/google/ko/issues/258
+   https://github.com/skirsten/ko/issues/258
 -----------------------------------------------------------------
 `
 

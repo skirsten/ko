@@ -23,8 +23,8 @@ import (
 	"strings"
 
 	"github.com/google/go-containerregistry/pkg/name"
-	"github.com/google/ko/pkg/build"
-	"github.com/google/ko/pkg/publish"
+	"github.com/skirsten/ko/pkg/build"
+	"github.com/skirsten/ko/pkg/publish"
 
 	"golang.org/x/tools/go/packages"
 )

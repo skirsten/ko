@@ -17,6 +17,6 @@ metadata:
   name: kodata
 spec:
   containers:
-  - name: obiwan
-    image: ko://github.com/google/ko/test
+    - name: obiwan
+      image: ko://github.com/skirsten/ko/test
   restartPolicy: Never

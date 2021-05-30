@@ -31,9 +31,9 @@ import (
 	v1 "github.com/google/go-containerregistry/pkg/v1"
 	"github.com/google/go-containerregistry/pkg/v1/empty"
 	"github.com/google/go-containerregistry/pkg/v1/random"
-	"github.com/google/ko/pkg/build"
-	"github.com/google/ko/pkg/commands/options"
-	kotesting "github.com/google/ko/pkg/internal/testing"
+	"github.com/skirsten/ko/pkg/build"
+	"github.com/skirsten/ko/pkg/commands/options"
+	kotesting "github.com/skirsten/ko/pkg/internal/testing"
 	"gopkg.in/yaml.v3"
 )
 
@@ -147,7 +147,7 @@ func TestMakeBuilder(t *testing.T) {
 	if err != nil {
 		t.Fatalf("MakeBuilder(): %v", err)
 	}
-	res, err := builder.Build(ctx, "ko://github.com/google/ko/test")
+	res, err := builder.Build(ctx, "ko://github.com/skirsten/ko/test")
 	if err != nil {
 		t.Fatalf("builder.Build(): %v", err)
 	}
@@ -170,7 +170,7 @@ func TestMakePublisher(t *testing.T) {
 	}
 	defer publisher.Close()
 	ctx := context.Background()
-	importpath := "github.com/google/ko/test"
+	importpath := "github.com/skirsten/ko/test"
 	importpathWithScheme := build.StrictScheme + importpath
 	buildResult := empty.Index
 	ref, err := publisher.Publish(ctx, buildResult, importpathWithScheme)

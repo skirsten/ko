@@ -32,8 +32,8 @@ import (
 	v1 "github.com/google/go-containerregistry/pkg/v1"
 	"github.com/google/go-containerregistry/pkg/v1/remote"
 	"github.com/google/go-containerregistry/pkg/v1/types"
-	"github.com/google/ko/pkg/build"
-	"github.com/google/ko/pkg/commands/options"
+	"github.com/skirsten/ko/pkg/build"
+	"github.com/skirsten/ko/pkg/commands/options"
 	"github.com/spf13/viper"
 )
 

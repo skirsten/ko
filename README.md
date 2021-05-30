@@ -1,8 +1,8 @@
 # `ko`: Easy Go Containers
 
 [![Travis Build Status](https://travis-ci.org/google/ko.svg?branch=main)](https://travis-ci.org/google/ko)
-[![GitHub Actions Build Status](https://github.com/google/ko/workflows/Build/badge.svg)](https://github.com/google/ko/actions?query=workflow%3ABuild)
-[![GoDoc](https://godoc.org/github.com/google/ko?status.svg)](https://godoc.org/github.com/google/ko)
+[![GitHub Actions Build Status](https://github.com/skirsten/ko/workflows/Build/badge.svg)](https://github.com/skirsten/ko/actions?query=workflow%3ABuild)
+[![GoDoc](https://godoc.org/github.com/skirsten/ko?status.svg)](https://godoc.org/github.com/skirsten/ko)
 [![Go Report Card](https://goreportcard.com/badge/google/ko)](https://goreportcard.com/report/google/ko)
 
 <img src="./logo/ko.png" width="300">
@@ -24,13 +24,13 @@ tool for Kubernetes applications ([See below](#Kubernetes-Integration)).
 
 ## Install
 
-### Install from [Releases](https://github.com/google/ko/releases)
+### Install from [Releases](https://github.com/skirsten/ko/releases)
 
 ```
 VERSION=TODO # choose the latest version
 OS=Linux     # or Darwin
 ARCH=x86_64  # or arm64, i386, s390x
-curl -L https://github.com/google/ko/releases/download/v${VERSION}/ko_${VERSION}_${OS}_${ARCH}.tar.gz | tar xzf - ko
+curl -L https://github.com/skirsten/ko/releases/download/v${VERSION}/ko_${VERSION}_${OS}_${ARCH}.tar.gz | tar xzf - ko
 chmod +x ./ko
 ```
 
@@ -45,7 +45,7 @@ brew install ko
 With Go 1.16+, build and install the latest released version:
 
 ```
-go install github.com/google/ko
+go install github.com/skirsten/ko
 ```
 
 ## Authenticate
