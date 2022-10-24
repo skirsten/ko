@@ -114,6 +114,27 @@ func RateLimitError(msg string, args ...interface{}) error {
 	}
 }
 
+func DuplicateCertificateError(msg string, args ...interface{}) error {
+	return &BoulderError{
+		Type:   RateLimit,
+		Detail: fmt.Sprintf(msg+": see https://letsencrypt.org/docs/duplicate-certificate-limit/", args...),
+	}
+}
+
+func FailedValidationError(msg string, args ...interface{}) error {
+	return &BoulderError{
+		Type:   RateLimit,
+		Detail: fmt.Sprintf(msg+": see https://letsencrypt.org/docs/failed-validation-limit/", args...),
+	}
+}
+
+func RegistrationsPerIPError(msg string, args ...interface{}) error {
+	return &BoulderError{
+		Type:   RateLimit,
+		Detail: fmt.Sprintf(msg+": see https://letsencrypt.org/docs/too-many-registrations-for-this-ip/", args...),
+	}
+}
+
 func RejectedIdentifierError(msg string, args ...interface{}) error {
 	return New(RejectedIdentifier, msg, args...)
 }
