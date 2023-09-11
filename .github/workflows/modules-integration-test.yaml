@@ -18,7 +18,7 @@ jobs:
           go-version: ${{ matrix.go-version }}
           check-latest: true
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - env:
           GOPATH: does not matter
