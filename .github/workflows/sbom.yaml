@@ -52,7 +52,7 @@ jobs:
           go run ./ deps $img --sbom=cyclonedx > cyclonedx.json
           ./cyclonedx-linux-x64 validate --input-file=cyclonedx.json --fail-on-errors
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           name: cyclonedx.json
@@ -85,7 +85,7 @@ jobs:
 
           java -jar ./tools-java-1.0.4-jar-with-dependencies.jar Verify spdx.json
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           name: spdx.json
@@ -123,7 +123,7 @@ jobs:
 
           java -jar ./tools-java-1.0.4-jar-with-dependencies.jar Verify spdx-multi-arch.json
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           name: spdx-multi-arch.json
