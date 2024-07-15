@@ -23,7 +23,7 @@ require (
 	github.com/sigstore/rekor v0.7.0 // indirect
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/viper v1.12.0
-	go.uber.org/automaxprocs v1.5.1
+	go.uber.org/automaxprocs v1.5.3
 	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f
 	golang.org/x/term v0.0.0-20220526004731-065cf7ba2467 // indirect
 	golang.org/x/tools v0.1.11
