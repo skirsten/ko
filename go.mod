@@ -15,7 +15,7 @@ require (
 	github.com/go-openapi/analysis v0.21.3 // indirect
 	github.com/go-training/helloworld v0.0.0-20200225145412-ba5f4379d78b
 	github.com/golang-jwt/jwt/v4 v4.4.1 // indirect
-	github.com/google/go-cmp v0.5.8
+	github.com/google/go-cmp v0.6.0
 	github.com/google/go-containerregistry v0.11.0
 	github.com/letsencrypt/boulder v0.0.0-20220525221457-11544756bbe8 // indirect
 	github.com/opencontainers/image-spec v1.0.3-0.20220114050600-8b9d41f48198
@@ -24,9 +24,8 @@ require (
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/viper v1.12.0
 	go.uber.org/automaxprocs v1.5.1
-	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f
-	golang.org/x/term v0.0.0-20220526004731-065cf7ba2467 // indirect
-	golang.org/x/tools v0.1.11
+	golang.org/x/sync v0.8.0
+	golang.org/x/tools v0.24.0
 	gopkg.in/ini.v1 v1.66.6 // indirect
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/apimachinery v0.24.3
