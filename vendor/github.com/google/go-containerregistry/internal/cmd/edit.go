@@ -17,20 +17,23 @@ package cmd
 import (
 	"archive/tar"
 	"bytes"
+	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/google/go-containerregistry/internal/editor"
+	"github.com/google/go-containerregistry/internal/verify"
 	"github.com/google/go-containerregistry/pkg/crane"
 	"github.com/google/go-containerregistry/pkg/name"
 	v1 "github.com/google/go-containerregistry/pkg/v1"
 	"github.com/google/go-containerregistry/pkg/v1/mutate"
 	"github.com/google/go-containerregistry/pkg/v1/remote"
+	"github.com/google/go-containerregistry/pkg/v1/static"
 	"github.com/google/go-containerregistry/pkg/v1/tarball"
 	"github.com/google/go-containerregistry/pkg/v1/types"
 	"github.com/spf13/cobra"
@@ -68,7 +71,7 @@ func NewCmdEditConfig(options *[]crane.Option) *cobra.Command {
   echo '{}' | crane edit config ubuntu`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			ref, err := editConfig(cmd.InOrStdin(), cmd.OutOrStdout(), args[0], dst, *options...)
+			ref, err := editConfig(cmd.Context(), cmd.InOrStdin(), cmd.OutOrStdout(), args[0], dst, *options...)
 			if err != nil {
 				return fmt.Errorf("editing config: %w", err)
 			}
@@ -83,18 +86,18 @@ func NewCmdEditConfig(options *[]crane.Option) *cobra.Command {
 
 // NewCmdManifest creates a new cobra.Command for the manifest subcommand.
 func NewCmdEditManifest(options *[]crane.Option) *cobra.Command {
-	var dst string
+	var (
+		dst string
+		mt  string
+	)
 	cmd := &cobra.Command{
 		Use:   "manifest",
 		Short: "Edit an image's manifest.",
-		Example: `  # Edit ubuntu's config file
-  crane edit config ubuntu
-
-  # Overwrite ubuntu's config file with '{}'
-  echo '{}' | crane edit config ubuntu`,
+		Example: `  # Edit ubuntu's manifest
+  crane edit manifest ubuntu`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			ref, err := editManifest(cmd.InOrStdin(), cmd.OutOrStdout(), args[0], dst, *options...)
+			ref, err := editManifest(cmd.InOrStdin(), cmd.OutOrStdout(), args[0], dst, mt, *options...)
 			if err != nil {
 				return fmt.Errorf("editing manifest: %w", err)
 			}
@@ -103,6 +106,7 @@ func NewCmdEditManifest(options *[]crane.Option) *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVarP(&dst, "tag", "t", "", "New tag reference to apply to mutated image. If not provided, uses original tag or pushes a new digest.")
+	cmd.Flags().StringVarP(&mt, "media-type", "m", "", "Override the mediaType used as the Content-Type for PUT")
 
 	return cmd
 }
@@ -139,7 +143,7 @@ func interactive(in io.Reader, out io.Writer) bool {
 	return interactiveFile(in) && interactiveFile(out)
 }
 
-func interactiveFile(i interface{}) bool {
+func interactiveFile(i any) bool {
 	f, ok := i.(*os.File)
 	if !ok {
 		return false
@@ -151,12 +155,43 @@ func interactiveFile(i interface{}) bool {
 	return (stat.Mode() & os.ModeCharDevice) != 0
 }
 
-func editConfig(in io.Reader, out io.Writer, src, dst string, options ...crane.Option) (name.Reference, error) {
+func editConfig(ctx context.Context, in io.Reader, out io.Writer, src, dst string, options ...crane.Option) (name.Reference, error) {
 	o := crane.GetOptions(options...)
 
 	img, err := crane.Pull(src, options...)
 	if err != nil {
 		return nil, err
+	}
+
+	mt, err := img.MediaType()
+	if err != nil {
+		return nil, err
+	}
+
+	// We want to omit Layers in certain situations, so we don't use v1.Image.Manifest() here.
+	// Instead, we treat the manifest as a map[string]any and just manipulate the config desc.
+	mb, err := img.RawManifest()
+	if err != nil {
+		return nil, err
+	}
+
+	jsonMap := map[string]any{}
+	if err := json.Unmarshal(mb, &jsonMap); err != nil {
+		return nil, err
+	}
+
+	cv, ok := jsonMap["config"]
+	if !ok {
+		return nil, fmt.Errorf("config missing")
+	}
+	cb, err := json.Marshal(cv)
+	if err != nil {
+		return nil, fmt.Errorf("json.Marshal config: %w", err)
+	}
+
+	config := v1.Descriptor{}
+	if err := json.Unmarshal(cb, &config); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal config: %w", err)
 	}
 
 	var edited []byte
@@ -170,27 +205,40 @@ func editConfig(in io.Reader, out io.Writer, src, dst string, options ...crane.O
 			return nil, err
 		}
 	} else {
-		b, err := ioutil.ReadAll(in)
+		b, err := io.ReadAll(in)
 		if err != nil {
 			return nil, err
 		}
 		edited = b
 	}
 
-	cf, err := v1.ParseConfigFile(bytes.NewReader(edited))
+	// this has to happen before we modify the descriptor (so we can use verify.Descriptor to validate whether m.Config.Data matches m.Config.Digest/Size)
+	if config.Data != nil && verify.Descriptor(config) == nil {
+		// https://github.com/google/go-containerregistry/issues/1552#issuecomment-1452653875
+		// "if data is non-empty and correct, we should update it"
+		config.Data = edited
+	}
+
+	l := static.NewLayer(edited, config.MediaType)
+	layerDigest, err := l.Digest()
 	if err != nil {
 		return nil, err
 	}
 
-	img, err = mutate.ConfigFile(img, cf)
+	config.Digest = layerDigest
+	config.Size = int64(len(edited))
+
+	jsonMap["config"] = config
+	b, err := json.Marshal(jsonMap)
 	if err != nil {
 		return nil, err
+	}
+	rm := &rawManifest{
+		body:      b,
+		mediaType: mt,
 	}
 
-	digest, err := img.Digest()
-	if err != nil {
-		return nil, err
-	}
+	digest, _, _ := v1.SHA256(bytes.NewReader(b))
 
 	if dst == "" {
 		dst = src
@@ -208,14 +256,23 @@ func editConfig(in io.Reader, out io.Writer, src, dst string, options ...crane.O
 		return nil, err
 	}
 
-	if err := crane.Push(img, dst, options...); err != nil {
+	pusher, err := remote.NewPusher(o.Remote...)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := pusher.Upload(ctx, dstRef.Context(), l); err != nil {
+		return nil, err
+	}
+
+	if err := pusher.Push(ctx, dstRef, rm); err != nil {
 		return nil, err
 	}
 
 	return dstRef, nil
 }
 
-func editManifest(in io.Reader, out io.Writer, src string, dst string, options ...crane.Option) (name.Reference, error) {
+func editManifest(in io.Reader, out io.Writer, src string, dst string, mt string, options ...crane.Option) (name.Reference, error) {
 	o := crane.GetOptions(options...)
 
 	ref, err := name.ParseReference(src, o.Name...)
@@ -235,7 +292,7 @@ func editManifest(in io.Reader, out io.Writer, src string, dst string, options .
 			return nil, err
 		}
 	} else {
-		b, err := ioutil.ReadAll(in)
+		b, err := io.ReadAll(in)
 		if err != nil {
 			return nil, err
 		}
@@ -258,9 +315,22 @@ func editManifest(in io.Reader, out io.Writer, src string, dst string, options .
 		return nil, err
 	}
 
+	if mt == "" {
+		// If --media-type is unset, use Content-Type by default.
+		mt = string(desc.MediaType)
+
+		// If document contains mediaType, default to that.
+		wmt := withMediaType{}
+		if err := json.Unmarshal(edited, &wmt); err == nil {
+			if wmt.MediaType != "" {
+				mt = wmt.MediaType
+			}
+		}
+	}
+
 	rm := &rawManifest{
 		body:      edited,
-		mediaType: desc.MediaType,
+		mediaType: types.MediaType(mt),
 	}
 
 	if err := remote.Put(dstRef, rm, o.Remote...); err != nil {
@@ -299,7 +369,7 @@ func editFile(in io.Reader, out io.Writer, src, file, dst string, options ...cra
 		}
 		header = h
 	} else {
-		b, err := ioutil.ReadAll(in)
+		b, err := io.ReadAll(in)
 		if err != nil {
 			return nil, err
 		}
@@ -324,7 +394,7 @@ func editFile(in io.Reader, out io.Writer, src, file, dst string, options ...cra
 
 	fileBytes := buf.Bytes()
 	fileLayer, err := tarball.LayerFromOpener(func() (io.ReadCloser, error) {
-		return ioutil.NopCloser(bytes.NewBuffer(fileBytes)), nil
+		return io.NopCloser(bytes.NewBuffer(fileBytes)), nil
 	})
 	if err != nil {
 		return nil, err
@@ -401,6 +471,10 @@ func blankHeader(name string) *tar.Header {
 
 func normalize(name string) string {
 	return filepath.Clean("/" + name)
+}
+
+type withMediaType struct {
+	MediaType string `json:"mediaType,omitempty"`
 }
 
 type rawManifest struct {
