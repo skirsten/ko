@@ -15,7 +15,7 @@ jobs:
           go-version: 1.17
           check-latest: true
       - uses: actions/checkout@v3
-      - uses: chainguard-dev/actions/gofmt@84c993eaf02da1c325854fb272a4df9184bd80fc # main
+      - uses: chainguard-dev/actions/gofmt@80013e908e778d79f1abf512b5b8770c19803b90 # main
         with:
           args: -s
 
@@ -28,7 +28,7 @@ jobs:
           go-version: 1.17
           check-latest: true
       - uses: actions/checkout@v3
-      - uses: chainguard-dev/actions/goimports@84c993eaf02da1c325854fb272a4df9184bd80fc # main
+      - uses: chainguard-dev/actions/goimports@80013e908e778d79f1abf512b5b8770c19803b90 # main
 
   lint:
     name: Lint
@@ -44,10 +44,10 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - uses: chainguard-dev/actions/trailing-space@84c993eaf02da1c325854fb272a4df9184bd80fc # main
+      - uses: chainguard-dev/actions/trailing-space@80013e908e778d79f1abf512b5b8770c19803b90 # main
         if: ${{ always() }}
 
-      - uses: chainguard-dev/actions/eof-newline@84c993eaf02da1c325854fb272a4df9184bd80fc # main
+      - uses: chainguard-dev/actions/eof-newline@80013e908e778d79f1abf512b5b8770c19803b90 # main
         if: ${{ always() }}
 
       - uses: reviewdog/action-misspell@v1
