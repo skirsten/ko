@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: chainguard-dev/actions/boilerplate@84c993eaf02da1c325854fb272a4df9184bd80fc # main
+      - uses: chainguard-dev/actions/boilerplate@03a32602008ab8e3936b0c1fa32a360410dc9f98 # main
         with:
           extension: ${{ matrix.extension }}
           language: ${{ matrix.language }}
