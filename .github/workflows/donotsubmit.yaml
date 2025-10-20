@@ -12,4 +12,4 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - uses: chainguard-dev/actions/donotsubmit@84c993eaf02da1c325854fb272a4df9184bd80fc # main
+    - uses: chainguard-dev/actions/donotsubmit@1b32103f5aa389c31ab0be75a8edc38d7e4750d8 # main
